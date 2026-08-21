@@ -48,6 +48,22 @@ want to use. The action will use the first one it finds.
 * `yc-sa-id` should contain Service Account ID. It can be obtained using `yc iam service-accounts list` command. It is
   used to exchange GitHub token for IAM token using Workload Identity Federation. More info in [Yandex Cloud IAM documentation](https://yandex.cloud/ru/docs/iam/concepts/workload-identity).
 
+> [!IMPORTANT]
+> Glob patterns in `include` are **not recursive by default**. The default value `*` matches only files located
+> directly in `root`; files in nested directories are not uploaded. To upload a folder with all of its
+> subdirectories, use the `**/*` pattern:
+
+```yaml
+    - name: Upload files to Object Storage
+      id: s3-upload
+      uses: yc-actions/yc-obj-storage-upload@v4
+      with:
+        yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+        bucket: ${{ secrets.BUCKET }}
+        root: ./dist
+        include: '**/*'
+```
+
 You can also use `clear: true` option to clear bucket before uploading files.
 
 ```yaml
